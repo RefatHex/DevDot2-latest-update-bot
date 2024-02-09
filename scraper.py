@@ -11,6 +11,5 @@ def get_title():
 
     post = soup.find("div", class_="crayons-story__body")
     title = post .find("h2", class_="crayons-story__title").text.strip()
-    print(title)
 
-    return title
+    return title+'\nFor full article visit DEV.TO '
