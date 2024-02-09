@@ -6,8 +6,10 @@ name = "pypi"
 [packages]
 requests = "*"
 bs4 = "*"
+python-telegram-bot = "*"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
 python_version = "3.11"
