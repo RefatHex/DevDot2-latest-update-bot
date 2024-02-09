@@ -5,8 +5,15 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 
+post_text = None
+
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hello! Thanks for using our BOT")
+    global post_text
+    post_text = get_title()
+    if post_text is not None:
+        await update.message.reply_text(post_text)
     await handle_auto_update(update)
 
 
@@ -17,8 +24,8 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("This is a custom command")
 
-
 # Responses
+
 
 def handle_response(text: str) -> str:
     processed: str = text.lower()
@@ -46,9 +53,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def handle_auto_update(update: Update):
-    last_processed_news: str = ""
+    global post_text
+    last_processed_news: str = post_text
     while True:
-        post_text: str = get_title()
+        post_text = get_title()
         if post_text is not None and post_text != last_processed_news:
             await update.message.reply_text(post_text)
             print(post_text)
@@ -59,7 +67,6 @@ async def handle_auto_update(update: Update):
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {update} caused error: {context.error}')
-
 
 if __name__ == '__main__':
     print('Starting bot')
