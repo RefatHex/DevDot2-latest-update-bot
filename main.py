@@ -1,3 +1,4 @@
+import asyncio
 import time
 from TOKEN import TOKEN, BOT_USERNAME
 from scraper import get_title
@@ -53,14 +54,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def handle_auto_update(update: Update):
-    global post_text
-    new_post_text = get_title()
-    if new_post_text is not None and new_post_text != post_text:
-        await update.message.reply_text(new_post_text)
-        print(new_post_text)
-        post_text = new_post_text
+    last_processed_news: str = ""
+    while True:
+        post_text: str = get_title()
+        if post_text is not None and post_text != last_processed_news:
+            await update.message.reply_text(post_text)
+            print(post_text)
+            last_processed_news = post_text
 
-    time.sleep(5)
+        time.sleep(5)
 
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
